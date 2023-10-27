@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import TextInput from './TextInput';
+import { TextInput } from '../TextInput';
+import styles from './CreateUser.module.css';
+//import styles from './TextInput.module.css';
+import { useCreateUserMutation } from '../../store/api/usersApi';
 
-const CreateUser = () => {
+export const CreateUser = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [feedback, setFeedback] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [createUser] = useCreateUserMutation();
 
   const submitHandler = () => {
     console.log(firstName, lastName);
@@ -17,6 +21,8 @@ const CreateUser = () => {
       setTimeout(() => {
         setFeedback('');
       }, 5000);
+
+      createUser({ user: { firstName: firstName, lastName: lastName } });
     } else {
       setSubmitted(false);
       setFeedback('Du måste fylla i båda fälten');
@@ -24,17 +30,7 @@ const CreateUser = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: 'white',
-        padding: '2rem',
-        borderRadius: '8px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center', flexDirection: 'column',
-        boxShadow: '0px 0px 20px 0px rgba(255, 255, 255, 0.5)'
-      }}
-    >
+    <div className={styles.container}>
       <TextInput
         value={firstName}
         placeholder="First Name"
@@ -49,9 +45,12 @@ const CreateUser = () => {
           setLastName(event.target.value);
         }}
       />
-      <button onClick={submitHandler}>Skicka</button>
+      <button className={styles.submitButton} onClick={submitHandler}>
+        Lägg till Användare
+      </button>
       {feedback && (
         <p
+          className={styles.feedbackText}
           style={{
             color: submitted ? 'green' : 'red'
           }}
@@ -62,5 +61,3 @@ const CreateUser = () => {
     </div>
   );
 };
-
-export default CreateUser;

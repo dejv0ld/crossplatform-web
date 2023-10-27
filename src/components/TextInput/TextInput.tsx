@@ -1,4 +1,4 @@
-const TextInput = (props) => {
+export const TextInput = (props) => {
   const { placeholder, value, onInput } = props;
   return (
     <input
@@ -10,5 +10,3 @@ const TextInput = (props) => {
     />
   );
 };
-
-export default TextInput;
