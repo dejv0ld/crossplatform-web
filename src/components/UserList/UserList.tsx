@@ -2,9 +2,13 @@ import {
   useGetUsersQuery,
   useDeleteUserMutation
 } from '../../store/api/usersApi';
+import { UpdateUser } from '../UpdateUser';
+import React, { useState } from 'react';
 
 export const UserList = () => {
   const [deleteUser] = useDeleteUserMutation();
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   //Refetch function
   const handleRefetch = () => {
@@ -23,10 +27,27 @@ export const UserList = () => {
     }
   };
 
+  //Edit function
+  const handleEdit = (user) => {
+    setCurrentUser(user);
+    setIsEditing(true);
+  };
+
   //Renders the list of users
   const { data: users, isLoading, isError, refetch } = useGetUsersQuery({});
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error fetching users!</p>;
+
+  if (isEditing && currentUser) {
+    return (
+      <UpdateUser
+        userId={currentUser.id}
+        user={currentUser}
+        onDone={() => setIsEditing(false)}
+      />
+    );
+  }
+
   return (
     <div>
       <ul>
@@ -35,6 +56,7 @@ export const UserList = () => {
           .map((user) => (
             <li key={user.id}>
               {user.firstName} {user.lastName}
+              <button onClick={() => handleEdit(user)}>Edit</button>
               <button onClick={() => handleDelete(user.id)}>Delete</button>
             </li>
           ))}

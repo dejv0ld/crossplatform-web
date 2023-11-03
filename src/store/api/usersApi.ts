@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { db } from '../../firebase-config';
-import { addDoc, collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { addDoc, collection, getDocs, deleteDoc, doc, setDoc } from 'firebase/firestore';
 
 const firebaseBaseQuery = async ({ baseUrl, url, method, body }) => {
   switch (method) {
@@ -20,6 +20,11 @@ const firebaseBaseQuery = async ({ baseUrl, url, method, body }) => {
       const deleteRef = doc(db, url);
       await deleteDoc(deleteRef);
       return { data: 'Deleted successfully' };
+
+    case 'PUT':
+      const putRef = doc(db, url);
+      await setDoc(putRef, body, { merge: true });
+      return { data: 'Updated successfully' };
   }
 
 };
@@ -27,6 +32,7 @@ const firebaseBaseQuery = async ({ baseUrl, url, method, body }) => {
 export const usersApi = createApi({
   reducerPath: 'usersApi',
   baseQuery: firebaseBaseQuery,
+  tagTypes: ['Users'],
   endpoints: (builder) => ({
     createUser: builder.mutation({
       query: ({ user }) => ({
@@ -35,8 +41,9 @@ export const usersApi = createApi({
         method: 'POST',
         body: user
       }),
+      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
     }),
-    //Lägg till getUsers här
+    //Get users
     getUsers: builder.query({
       query: () => ({
         baseUrl: '',
@@ -44,7 +51,13 @@ export const usersApi = createApi({
         method: 'GET',
         body: ''
       }),
+      providesTags: (result) =>
+        result
+          ? [...result.map(({ id }) => ({ type: 'Users', id })), { type: 'Users', id: 'LIST' },
+          ]
+          : [{ type: 'Users', id: 'LIST' }],
     }),
+    //Delete user
     deleteUser: builder.mutation({
       query: ({ userId }) => ({
         baseUrl: '',
@@ -53,9 +66,19 @@ export const usersApi = createApi({
         body: ''
       }),
     }),
+    //Update user
+    updateUser: builder.mutation({
+      query: ({ userId, user }) => ({
+        baseUrl: '',
+        url: `users/${userId}`,
+        method: 'PUT',
+        body: user
+      }),
+      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
+    }),
   }),
 });
 
 
 
-export const { useCreateUserMutation, useGetUsersQuery, useDeleteUserMutation } = usersApi;
+export const { useCreateUserMutation, useGetUsersQuery, useDeleteUserMutation, useUpdateUserMutation } = usersApi;
