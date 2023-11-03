@@ -1,0 +1,25 @@
+.btn {
+  background-color: #3c425c;
+  margin: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  border: none;
+  font-size: 0.5rem;
+  font-weight: 600;
+  padding: 0.5rem 1.6rem;
+  border-radius: 2rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  box-shadow: 0 0.1rem 0.4rem -0.2rem rgba(0, 0, 0, 0.8);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+li {
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+label {
+  font-size: 16px;
+}

@@ -26,21 +26,34 @@ export const UpdateUser = ({ userId, user, onDone }) => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <form className={styles.container} onSubmit={handleSubmit}>
+    <form className={styles.formContainer} onSubmit={handleSubmit}>
+      <h2 className={styles.title}>Edit User</h2>
+      <label className={styles.label} htmlFor="firstName">
+        First Name:
+      </label>
       <input
+        className={styles.input}
         name="firstName"
         value={formData.firstName}
         onChange={handleChange}
       />
+      <label className={styles.label} htmlFor="firstName">
+        Last Name:
+      </label>
       <input
+        className={styles.input}
         name="lastName"
         value={formData.lastName}
         onChange={handleChange}
       />
-      <button type="submit">Submit</button>
-      <button type="button" onClick={onDone}>
-        Cancel
-      </button>
+      <div>
+        <button className={styles.btn} type="submit">
+          Submit
+        </button>
+        <button className={styles.btn} type="button" onClick={onDone}>
+          Cancel
+        </button>
+      </div>
     </form>
   );
 };
